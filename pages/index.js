@@ -1,23 +1,48 @@
-import Head from 'next/head'
-import Header from '@components/Header'
-import Footer from '@components/Footer'
+import Head from "next/head";
+import Header from "@components/Header";
+import Footer from "@components/Footer";
+
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+
+import { useState } from "react";
+import Link from "next/link";
+
+// i have no idea what i'm doing
+function useInput(defaultValue) {
+  const [value, setValue] = useState(defaultValue);
+  function onChange(e) {
+    setValue(e.target.value);
+  }
+  return {
+    value,
+    onChange,
+  };
+}
 
 export default function Home() {
+  const inputProps = useInput();
+
   return (
     <div className="container">
       <Head>
-        <title>Next.js Starter!</title>
+        <title>paper data quality lookup</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main>
-        <Header title="Welcome to my app!" />
-        <p className="description">
-          Potato potato
-        </p>
+        <TextField
+          label="search for a doi"
+          variant="outlined"
+          {...inputProps}
+        />
+        <p />
+        <Link href={inputProps.value ? `/dq/${inputProps.value}` : "#"}>
+          <Button variant="contained">Search</Button>
+        </Link>
       </main>
 
       <Footer />
     </div>
-  )
+  );
 }

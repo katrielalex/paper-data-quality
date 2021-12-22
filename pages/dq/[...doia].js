@@ -9,14 +9,19 @@ import SvgIcon from "@mui/material/SvgIcon";
 import Link from "next/link";
 
 export async function getServerSideProps(context) {
+  const doi = context.params.doia?.join("/");
+
   let uri = new URL("https://api.openaccessbutton.org/metadata");
-  uri.searchParams.append("id", "10.1007/s00145-020-09360-1");
+  uri.searchParams.append("id", doi);
   const res = await fetch(uri.href);
   const metadata = await res.json();
 
+  // i hate everything
+  const found = JSON.stringify(metadata) !== `{"title":"${doi}"}`;
+
   return {
     props: {
-      data: { doi: context.params.doia?.join("/"), metadata: metadata },
+      data: { found, metadata },
     },
   };
 }
@@ -43,12 +48,14 @@ const Post = ({ data }) => {
       <main>
         {doi == null ? (
           "Loading..."
+        ) : !data.found ? (
+          "Not found"
         ) : (
           <>
             <Header title={data.metadata.title} />
             <p>
-              <a href={`https://dx.doi.org/${doi}`}>
-                <code>{doi}</code>
+              <a href={`https://dx.doi.org/${data.metadata.doi ?? doi}`}>
+                <code>{data.metadata.doi ?? doi}</code>
               </a>{" "}
               ({data.metadata.journal})
             </p>
