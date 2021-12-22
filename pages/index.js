@@ -40,6 +40,10 @@ export default function Home() {
         <Link href={inputProps.value ? `/dq/${inputProps.value}` : "#"}>
           <Button variant="contained">Search</Button>
         </Link>
+        <p />
+        <Link href="/dq/10.1007/s00145-020-09360-1">
+          <Button variant="text">Try an example</Button>
+        </Link>
       </main>
 
       <Footer />
